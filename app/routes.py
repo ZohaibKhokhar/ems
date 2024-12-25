@@ -24,12 +24,17 @@ def register():
             flash("Username and password are required.", "danger")
             return redirect(url_for("main.register"))
 
+        # Check if the username already exists
+        existing_user = mongo.db.users.find_one({"username": username})
+        if existing_user:
+            flash("Username already exists. Please choose a different username.", "danger")
+            return redirect(url_for("main.register"))
+
         hashed_password = generate_password_hash(password, method="sha256")
         mongo.db.users.insert_one({"username": username, "password": hashed_password})
         return render_template("message.html", message="User registered successfully!")  # Render a message template
 
-    return render_template("register.html")# Route to login a user
-
+    return render_template("register.html")
 
 @main.route("/login", methods=["POST", "GET"])
 def login():

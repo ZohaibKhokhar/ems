@@ -2,6 +2,11 @@ import pytest
 from flask import url_for
 
 
+# tests/test_app.py
+def test_homepage(client):
+    response = client.get("/")
+    assert response.status_code == 200
+    assert b"Welcome to the Election Management System" in response.data
 
 
 # 1. Voter Registration
@@ -137,24 +142,24 @@ def test_cast_vote(client, init_database):
 
 
 
-# 5. Results and Analytics
-# def test_view_votes(client, init_database):
-#     # Log in as admin
-#     response = client.post('/login', data={
-#         "username": "zohaib@12345",
-#         "password": "12345"
-#     })
-#     assert response.status_code == 200
-#     assert b"Logged in successfully!" in response.data
+#5. Results and Analytics
+def test_view_votes(client, init_database):
+    # Log in as admin
+    response = client.post('/login', data={ 
+        "username": "zohaib@12345",
+        "password": "12345"
+    })
+    assert response.status_code == 200
+    assert b"Logged in successfully!" in response.data
 
-#     response = client.get('/view_votes')
-#     assert response.status_code == 200
+    response = client.get('/view_votes')
+    assert response.status_code == 200
 
-#     # Log the response data for debugging
-#     response_data = response.data.decode('utf-8')
-#     print(response_data)
+    # Log the response data for debugging
+    response_data = response.data.decode('utf-8')
+    print(response_data)
 
-#     assert b"Votes by Party" in response.data
+    assert b"All Votes" in response.data
 
 
 # 6. Role-Based Access
